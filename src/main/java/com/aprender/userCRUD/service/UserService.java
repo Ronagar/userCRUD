@@ -51,4 +51,19 @@ public class UserService {
         return new ResponseEntity<>(responseData, HttpStatus.CREATED);
 
     }
+
+    public ResponseEntity<Object> updateUser(String username, User user) {
+        //Optional<User> res = userRepository.findById(username);
+        HashMap<String, Object> responseData = new HashMap<>();
+
+        if (!userRepository.existsById(username)){
+            responseData.put("error", true);
+            responseData.put("message", "No existe el usuario a actualizar");
+            return new ResponseEntity<>(responseData, HttpStatus.CONFLICT);
+        }
+        userRepository.save(user);
+        responseData.put("message", "Usuario actualizado con éxito");
+        responseData.put("data", user);
+        return new ResponseEntity<>(responseData, HttpStatus.ACCEPTED);
+    }
 }
