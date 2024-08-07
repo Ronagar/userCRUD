@@ -66,4 +66,17 @@ public class UserService {
         responseData.put("data", user);
         return new ResponseEntity<>(responseData, HttpStatus.ACCEPTED);
     }
+
+    public ResponseEntity<Object> deleteUser(String username) {
+        HashMap<String, Object> responseData = new HashMap<>();
+
+        if (!userRepository.existsById(username)){
+            responseData.put("error", true);
+            responseData.put("message", "No existe el usuario a eliminar");
+            return new ResponseEntity<>(responseData, HttpStatus.CONFLICT);
+        }
+        userRepository.deleteById(username);
+        responseData.put("message", "Usuario " + username + " eliminado con éxito");
+        return new ResponseEntity<>(responseData, HttpStatus.ACCEPTED);
+    }
 }
