@@ -31,5 +31,24 @@ public class UserService {
     }
 
 
+    public ResponseEntity<Object> postUser(User user) {
+        Optional<User> res = userRepository.findById(user.getUsername());
+        HashMap<String, Object> responseData = new HashMap<>();
 
+        if (res.isPresent()){
+            responseData.put("error", true);
+            responseData.put("message", "El nombre de usuario ya está siendo utilizado");
+            return new ResponseEntity<>(responseData, HttpStatus.CONFLICT);
+        }
+        else if (userRepository.findByEmail(user.getEmail()).isPresent()){
+            responseData.put("error", true);
+            responseData.put("message", "El email ya está siendo utilizado");
+            return new ResponseEntity<>(responseData, HttpStatus.CONFLICT);
+        }
+        userRepository.save(user);
+        responseData.put("message", "Usuario creado con éxito");
+        responseData.put("data", user);
+        return new ResponseEntity<>(responseData, HttpStatus.CREATED);
+
+    }
 }
